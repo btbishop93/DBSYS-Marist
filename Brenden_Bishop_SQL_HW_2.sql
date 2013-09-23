@@ -20,7 +20,7 @@ where cid not in (select cid from orders
 select distinct cid, name
 from customers
 where cid in (select cid from orders
-		where pid = 'p01's
+		where pid = 'p01'
 		intersect
 		select cid from orders
 			where pid = 'p07');
