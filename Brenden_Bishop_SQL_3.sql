@@ -68,8 +68,46 @@ where customers.city in(select city from (select p2.city, count(*) as city_count
 	order by city_count asc
 	limit 1);
 
+---10---
 
+select distinct customers.name, customers.city
+from customers
+where customers.city in(select city from (select p2.city, count(*) as city_count
+	from products p2
+	group by p2.city) as city_count
+	order by city_count desc
+	limit 1);
 
+---11---
+
+drop view if exists cityCount;
+create view cityCount as (select p2.city, count(*) as city_count
+	from products p2
+	group by p2.city
+	order by city_count desc
+	);
+select distinct customers.name, customers.city
+from customers
+where customers.city in(select city from cityCount
+			where city_count = (select max(city_count) 
+						from cityCount));
+
+---12---
+
+select name from products
+where priceUSD > (select avg(priceUSD) from products)
+order by name asc;
+
+---13---
+
+select customers.name, orders.pid, orders.dollars 
+from customers
+inner join
+orders
+on orders.cid = customers.cid
+order by dollars desc;
+
+---14---
 
 
 
