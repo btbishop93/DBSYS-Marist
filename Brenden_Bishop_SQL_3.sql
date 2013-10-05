@@ -42,11 +42,31 @@ where orders.cid is null;
 ---7---
 
 select distinct customers.name, agents.name
-from customers, agents, orders
-where orders.aid in (select aid from orders 
-		where orders.cid in (select cid from customers
-					where customers.city = agents.city));
+from customers
+join orders
+on customers.cid = orders.cid
+join agents
+on agents.aid = orders.aid
+and customers.city = agents.city
+order by customers.name asc;
 
+---8---
+
+select distinct customers.name, agents.name, customers.city
+from customers
+join agents
+on customers.city = agents.city
+order by customers.city asc;
+
+---9---
+
+select distinct customers.name, customers.city
+from customers
+where customers.city in(select city from (select p2.city, count(*) as city_count
+	from products p2
+	group by p2.city) as city_count
+	order by city_count asc
+	limit 1);
 
 
 
