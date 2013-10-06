@@ -1,4 +1,6 @@
-﻿---1---
+﻿---Brenden Bishop---
+---SQL HW 3---
+---1---
 select distinct city 
 from agents
 where aid in (select aid from orders
@@ -108,6 +110,48 @@ on orders.cid = customers.cid
 order by dollars desc;
 
 ---14---
+
+select customers.name, coalesce(orders.qty,'0') as "Order Quantity"
+from customers
+left outer join
+orders
+on orders.cid = customers.cid
+order by customers.name asc;
+
+---15---
+
+select distinct customers.name, products.name, agents.name
+from orders
+	inner join customers
+	on customers.cid = orders.cid 
+	join products 
+	on products.pid = orders.pid
+	join orders o2
+	on o2.aid = orders.aid
+	inner join agents
+	on agents.aid = orders.aid
+	and agents.city = 'New York'
+order by customers.name asc;
+
+---16---
+
+select orders.ordno, orders.dollars as "Inaccurate Total Costs"
+from orders 
+where orders.dollars not in (
+	select((products.priceUSD*orders.qty) - ((customers.discount*.01)*(products.priceUSD*orders.qty))) 
+	as totalCost
+	from customers
+	inner join
+	orders
+	on orders.cid = customers.cid
+	inner join products
+	on products.pid = orders.pid
+	order by orders.dollars);
+
+---17---
+
+update orders set dollars = '550' where ordno = 1011;
+
 
 
 
