@@ -1,103 +1,243 @@
-﻿
-drop table if exists Departments;
+﻿--- Actors ---
+drop table if exists actors;
+create table actors(
+	aid		int not null serial,
+	name		text not null,
+	address		text,
+	dob		timestamp not null,
+	hair_color	varchar(20),
+	eye_color	varchar(20),
+	height		varchar(10),
+	weight		varchar(10),
+	act_guild_date	text,
+primary key(aid);
 
-create table Departments(
-	Did		varchar(4) not null,
-	name		varchar(20) not null,
-	dateFound	date not null,
-	primary key(Did)
-      );
+--- Movies ---
+drop table if exists movies;
+create table movies(
+	mid			int not null serial,
+	name			text not null,
+	year_released		year not null,
+	dombox_sales_USD	money,
+	forbox_sales_USD	money,
+	dvd_sales_USD		money,
+primary key(mid);
 
-drop table if exists People;
+--- Directors ---
+drop table if exists directors;
+create table directors(
+	did		int not null serial,
+	name		text not null,
+	address		text,
+	film_school	text,
+	dir_guild_date	timestamp,
+primary key(did);
 
-create table People(
-	pid 		varchar(4) not null,
-	firstName 	varchar(20),
-	lastName	varchar(20) not null,
-	hireDate	date not null,
-	Did		varchar(4) not null references Departments(Did),
-	primary key(pid)
-      );
+--- Actors in the movies ---
+drop table if exists actor_movie;
+create table actor_movie(
+	actor_name	text not null references actors.name,
+	movie_name	text not null references movies.name,
+primary key(actor_name, movie_name)
+);
 
-drop table if exists Fy;
+--- Movies with their directors ---
+drop table if exists movie_director;
+create table movie_director(
+	movie_name	text not null references movies.name,
+	dir_name	text not null references directors.name,
+primary key(movie_name, dir_name);
 
-create table Fy (
-	year 		int not null,
-	startDate	date not null,
-	endDate		date not null,
-	primary key(year)
-      );
+--- Actors with their directors ---
+drop table if exists actor_director;
+create table actor_director(
+	relation_id	int not null serial,
+	actor_name	text not null references actors.name,
+	dir_name	text not null references directors.name,
+primary key(relation_id);
+
+--- Actors Inserts ---
+insert into actors(name, address, dob, hair_color, eye_color, height, weight, act_guild_date)
+		  values('Sean Connery', 'Edinburgh, Scotland', '10/25/1930', 'gray', 'brown',
+				'74 inches','220 lbs', 'null');
+				
+insert into actors(name, address, dob, hair_color, eye_color, height, weight, act_guild_date)
+		  values('Daniel Craig', 'Chester, Cheshire, England', '3/2/1968', 'brown', 'blue',
+				'70 inches','205 lbs', 'null');
+
+insert into actors(name, address, dob, hair_color, eye_color, height, weight, act_guild_date)
+		  values('Pierce Brosnan', 'Navan, Co. Meath, Ireland', '5/16/1953', 'brown', 'blue',
+				'73 inches','190 lbs', 'null');
+
+insert into actors(name, address, dob, hair_color, eye_color, height, weight, act_guild_date)
+		  values('Robert Downey Jr.', 'New York City, New York', '4/4/1965', 'brown', 'brown',
+				'69 inches','170 lbs', '2001');
+
+insert into actors(name, address, dob, hair_color, eye_color, height, weight, act_guild_date)
+		  values('Natalie Portman', 'Jerusalem, Israel', '6/9/1981', 'brown', 'brown',
+				'63 inches','115 lbs', '2011');
+
+insert into actors(name, address, dob, hair_color, eye_color, height, weight, act_guild_date)
+		  values('Al Pacino', 'New York City, New York', '4/25/1940', 'brown', 'brown',
+				'67 inches','165 lbs', '2011, 2004');
+
+--- Movies inserts --- 
+insert into movies(name, year_released, dombox_sales_USD, forbox_sales_USD, dvd_sales_USD)
+	values('Casino Royale', '2006', '167,445,960', '426,793,106', '81,510,078');
+
+insert into movies(name, year_released, dombox_sales_USD, forbox_sales_USD, dvd_sales_USD)
+	values('V for Vendetta', '2005', '70,511,035', '62,000,000', '58,830,596');
+
+insert into movies(name, year_released, dombox_sales_USD, forbox_sales_USD, dvd_sales_USD)
+	values('The Godfather', '1972', '134,966,411', '133,533,589', 'null');
+
+insert into movies(name, year_released, dombox_sales_USD, forbox_sales_USD, dvd_sales_USD)
+	values('Iron Man', '2008', '318,604,126', '263,839,000', '174,949,094');
+
+insert into movies(name, year_released, dombox_sales_USD, forbox_sales_USD, dvd_sales_USD)
+	values('GoldenEye', '1995', '106,429,941', '250,000,000', '46,040');
+
+insert into movies(name, year_released, dombox_sales_USD, forbox_sales_USD, dvd_sales_USD)
+	values('The League of Extraordinary Gentlemen', '2003', '66,465,204', '112,800,000', '36,400,000');
+
+insert into movies(name, year_released, dombox_sales_USD, forbox_sales_USD, dvd_sales_USD)
+	values('Dr. No', '1962', '16,067,035', '43,500,000', 'null');
+
+insert into movies(name, year_released, dombox_sales_USD, forbox_sales_USD, dvd_sales_USD)
+	values('Goldfinger', '1964', '51,100,000', '73,800,000', 'null');
+
+insert into movies(name, year_released, dombox_sales_USD, forbox_sales_USD, dvd_sales_USD)
+	values('Thunderball', '1965', '63,600,000', '77,600,000', 'null');
+
+--- Director Inserts ---
+
+insert into directors(name, address, film_school, dir_guild_date)
+	values('Martin Campbell', 'Hastings, New Zealand', 'null', 'null');
+
+insert into directors(name, address, film_school, dir_guild_date)
+	values('James McTeigue', 'Sydney, Australia', 'null', 'null');
+
+insert into directors(name, address, film_school, dir_guild_date)
+	values('Stephen Norrington', 'London, England', 'null', 'null');
+
+insert into directors(name, address, film_school, dir_guild_date)
+	values('Guy Hamilton', 'Paris, France', 'null', 'null');
+
+insert into directors(name, address, film_school, dir_guild_date)
+	values('Terence Young', 'Shanghai, China', 'null', 'null');
+
+insert into directors(name, address, film_school, dir_guild_date)
+	values('Jon Favreau', 'Queens, New York', 'Queens College', 'null');
+
+insert into directors(name, address, film_school, dir_guild_date)
+	values('Francis Coppola', 'Detroit, Michigan', 'Hofstra University', 'null');
+
+--- Actors in the movies ---
+
+insert into actor_movie (actor_name, movie_name)
+		values('Sean Connery', 'The League of Extraordinary Gentlemen');
+
+insert into actor_movie (actor_name, movie_name)
+		values('Sean Connery', 'Dr. No');
+
+insert into actor_movie (actor_name, movie_name)
+		values('Sean Connery', 'Goldfinger');
+
+insert into actor_movie (actor_name, movie_name)
+		values('Sean Connery', 'Thunderball');
+
+insert into actor_movie (actor_name, movie_name)
+		values('Daniel Craig', 'Casino Royale');
+
+insert into actor_movie (actor_name, movie_name)
+		values('Pierce Brosnan', 'GoldenEye');
+
+insert into actor_movie (actor_name, movie_name)
+		values('Robert Downey Jr.', 'Iron Man');
+
+insert into actor_movie (actor_name, movie_name)
+		values('Natalie Portman', 'V for Vendetta');
+
+insert into actor_movie (actor_name, movie_name)
+		values('Al Pacino', 'The Godfather');
+
+--- Movies with their directors ---
+insert into movie_director (movie_name, dir_name)
+		values('GoldenEye', 'Martin Campbell');
+
+insert into movie_director (movie_name, dir_name)
+		values('Casino Royale', 'Martin Campbell');
+
+insert into movie_director (movie_name, dir_name)
+		values('Dr. No', 'Terence Young');
+
+insert into movie_director (movie_name, dir_name)
+		values('Thunderball', 'Terence Young');
+
+insert into movie_director (movie_name, dir_name)
+		values('V for Vendetta', 'James McTeigue');
+
+insert into movie_director (movie_name, dir_name)
+		values('Goldfinger', 'Guy Hamilton');
+
+insert into movie_director (movie_name, dir_name)
+		values('The League of Extraordinary Gentlemen', 'Stephen Norrington');
+
+insert into movie_director (movie_name, dir_name)
+		values('Iron Man', 'Jon Favreau');
+
+insert into movie_director (movie_name, dir_name)
+		values('The Godfather', 'Francis Coppola');
 
 
-----Departments Data----
+--- Actors with their directors ---
+insert into actor_director (actor_name, dir_name)
+		values('Sean Connery', 'Terence Young');
 
-insert into Departments( Did, name, dateFound)
-		  values('A', 'CS', '6/30/2010');
+insert into actor_director (actor_name, dir_name)
+		values('Sean Connery', 'Guy Hamilton');
 
-insert into Departments( Did, name, dateFound)
-		  values('B', 'IT', '1/1/2013');
+insert into actor_director (actor_name, dir_name)
+		values('Sean Connery', 'Stephen Norrington');
 
-insert into Departments( Did, name, dateFound)
-		  values('C', 'IS', '7/4/2014');
+insert into actor_director (actor_name, dir_name)
+		values('Daniel Craig', 'Martin Campbell');
 
----People Data---
+insert into actor_director (actor_name, dir_name)
+		values('Pierce Brosnan', 'Martin Campbell');
 
-insert into People( pid, firstName, lastName, hireDate, Did)
-	      values('1', 'Thomas', 'Moran', '1/23/2008', 'A');
+insert into actor_director (actor_name, dir_name)
+		values('Robert Downey Jr.', 'Jon Favreau');
 
-insert into People( pid, firstName, lastName, hireDate, Did)
-	      values('2', 'Jimmy', 'Foote', '9/28/2006', 'A');
+insert into actor_director (actor_name, dir_name)
+		values('Natalie Portman', 'James McTeigue');
 
-insert into People( pid, firstName, lastName, hireDate, Did)
-	      values('3', 'Taylor', 'Allen', '4/4/2012', 'B');
+insert into actor_director (actor_name, dir_name)
+		values('Al Pacino', 'Francis Coppola');
 
-insert into People( pid, firstName, lastName, hireDate, Did)
-	      values('4', 'Adam', 'Jones', '11/11/2013', 'B');
+--- Functional Dependencies ---
+Actors Table: 
+aid -> name
+aid -> address
+aid -> dob
+aid -> hair_color
+aid -> eye_color
+aid -> height
+aid -> weight
+aid -> act_guild_date
 
-insert into People( pid, firstName, lastName, hireDate, Did)
-	      values('5', 'Katie', 'Smith', '11/11/2014', 'B');
+Movies Table:
+mid -> year_released
+mid -> dombox_sales
+mid -> forbox_sales
+mid -> dvd_sales
 
-----FiscalYear Data-----
+Directors Table:
+did -> name
+did -> address
+did -> film_school
+did -> dir_guild_date
 
-insert into fy( year, startDate, endDate )
-	values('2012','7/1/11', '6/30/2012');
-		  	
-
-insert into fy( year, startDate, endDate )
-	values('2013','7/1/12', '6/30/2013');
-
-
-insert into fy( year, startDate, endDate )
-	values('2014','7/1/13', '6/30/2014');
-
-
-insert into fy( year, startDate, endDate )
-	values('2015','7/1/14', '6/30/2015');
-
-
----QUERIES---
-
---1. List all people, the fiscal year in which they were hired, and their dept.---
---2. List all the depts and the number of people in each.---
---3. List all the fiscal years and the number of people hired in that time span---
---4. List all the fiscal years and the number of depts founded in that time span---
---5. List all the depts with no people.---
---6. List all the people with no dept---
---7. List all people hired before the dept was founded.
-
-select distinct firstName, lastName, hireDate, departments.name, year
-from people, fy, departments
-	where (hireDate > fy.startDate) and (hireDate < fy.endDate) 
-		and people.Did = departments.Did
-	order by fy.year;
-
-select distinct departments.name, count(people.Did)
-from departments, people
-where people.Did = departments.Did;
-
-
-
-
-
-
- 
+--- SQL Query ---
+select from actor_director
+where actor_name = 'Sean Connery';
